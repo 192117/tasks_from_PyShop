@@ -21,10 +21,12 @@ class Product(models.Model):
     description = models.TextField(u'описание', blank=True)
 
 def live_search(request):
+    ''' Return JSON objects. '''
     q = request.GET.get("q", "")
     if q:
-        items = Product.objects.filter(Q(sku__icontains=q) | Q(name__icontains=q) | Q(description__icontains=q))
+        items = Product.objects.filter(
+            Q(sku__icontains=q) | Q(name__icontains=q) | Q(description__icontains=q)).values()
         result = [item for item in items]
     else:
         result = []
-    return json.dumps(result)
+    return json.dumps(result) # It's true if 'Product' doesn't have a date or time in the fields.
